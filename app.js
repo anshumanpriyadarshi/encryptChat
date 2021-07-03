@@ -6,7 +6,9 @@ const passport = require("passport");
 const LocalStrategey = require("passport-local");
 const passportLocalMongoose = require("passport-local-mongoose");
 const User = require("./models/user.js");
+const Message = require("./models/message");
 const methodOverride = require("method-override");
+const message = require("./models/message.js");
 
 
 
@@ -40,12 +42,74 @@ passport.deserializeUser(User.deserializeUser());
 // })
 
 app.get("/",(req,res)=>{
-    res.render("home.ejs");
+    res.render("home.ejs",{currentUser: req.user});
     console.log(req.user);
 })
 
+app.get("/sendmsg",isLoggedIn,(req,res)=>{
+    res.render("sender.ejs",{currentUser: req.user});
+})
+
+app.post("/send",(req,res)=>{
+    let recipient = req.body.message.reciever;
+    User.find({"username" : recipient},(err,foundUser)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            // console.log(foundUser);
+            // let message = {};
+            // message.sender.id = req.user._id;
+            // message.sender.username = req.user.username;
+            // message.reciever.id = foundUser._id;
+            // message.reciever.username = foundUser.username;
+            // message.text = req.body.message;
+
+            Message.create(req.body.message,(err,createdMessage)=>{
+                // console.log("==" + req.body.)
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    
+                    createdMessage.sender.id = req.user._id;
+                    createdMessage.sender.username = req.user.username;
+                    createdMessage.reciever.id = foundUser[0]._id;
+                    createdMessage.reciever.username = foundUser[0].username;
+
+                    // console.log(foundUser[0]);
+                    // console.log(createdMessage.reciever);
+                    createdMessage.save((err,msg)=>{
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            
+                        }
+                    })
+
+                    foundUser[0].message.push(createdMessage);
+                    foundUser[0].save((err,doc)=>{
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            console.log(message);
+                            res.redirect("/chats");
+                        }
+                    })
+                }
+            })
+
+
+
+
+        }
+    } 
+)});
+
 app.get("/login",(req,res)=>{
-    res.render("login.ejs");
+    res.render("login.ejs",{currentUser:req.user});
 })
 
 app.get("/register",(req,res)=>{
@@ -84,8 +148,16 @@ app.get("/logout",(req,res)=>{
 
 // CHATS
 app.get("/chats", isLoggedIn ,(req,res)=>{
-    console.log("loopcheck");
-    res.render("chats.ejs");
+    // console.log("loopcheck");
+    User.findById(req.user._id).populate("message").exec((err,foundUser)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("chats.ejs",{currentUser:foundUser});
+        }
+    })
+    
 })
 
 
@@ -93,7 +165,7 @@ app.get("/chats", isLoggedIn ,(req,res)=>{
 function isLoggedIn(req,res,next) {
     
     if(req.isAuthenticated()){
-        console.log("yes")
+        // console.log("yes")
         next();
     }
     else res.redirect("/login");

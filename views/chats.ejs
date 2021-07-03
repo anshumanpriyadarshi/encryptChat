@@ -5,5 +5,14 @@
 </head>
 <body>
     <h1>Chats are here</h1>
+    <a href="/sendmsg">Send a Message</a>
+    <% currentUser.message.forEach(element => {  %>
+        <div>
+            <h5><%= element.sender.username %> - <%= element.reciever.username %> </h5>
+            <p> <%= element.text %>  </p>
+        </div>
+    <% }); %> 
+
+    <a href="/">Go home</a>
 </body>
 </html>

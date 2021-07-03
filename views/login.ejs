@@ -10,6 +10,8 @@
         <input type="text" name="password" placeholder="password">
         <input type="submit" value="LogIn">
     </form>
-    <a href="/logout">logout</a>
+    <% if(currentUser){ %> 
+        <a href="/logout">logout</a>
+        <% } %>
 </body>
 </html>
