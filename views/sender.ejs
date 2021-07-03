@@ -2,12 +2,23 @@
 <html lang="en">
 <head>
     <title>Send Message</title>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"
+        type="application/javascript"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    
 </head>
 <body>
+    <span id="sender" style="display: none;" ><%= currentUser.username %> </span>
     <form method="POST" action="/send">
-        <input type="text" placeholder="message" name="message[text]">
-        <input type="text" placeholder="TO.." name="message[reciever]"> 
-        <input type="submit">
+        <input id="msg" type="text" placeholder="message" name="message[text]">
+        <input id="reciever" type="text" placeholder="TO.." name="message[reciever]"> 
+        <input id="sub" type="submit">
     </form>
+    <script src="sender.js"></script>
+    
 </body>
 </html>

@@ -2,17 +2,26 @@
 <html lang="en">
 <head>
     <title>Chats - encryptChat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"
+        type="application/javascript"></script>
 </head>
 <body>
     <h1>Chats are here</h1>
+    <span id="sender" style="display: none;" ><%= currentUser.username %></span>
     <a href="/sendmsg">Send a Message</a>
     <% currentUser.message.forEach(element => {  %>
         <div>
-            <h5><%= element.sender.username %> - <%= element.reciever.username %> </h5>
+            <h5><%= element.sender.username %></h5>
             <p> <%= element.text %>  </p>
+            <button> decrypt</button>
         </div>
     <% }); %> 
 
     <a href="/">Go home</a>
+    <script src="decrypt.js"></script>
 </body>
 </html>
