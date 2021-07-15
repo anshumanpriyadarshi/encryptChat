@@ -8,20 +8,58 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"
         type="application/javascript"></script>
+    <script
+        src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+        <!-- <link rel="stylesheet" href="login.css"> -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-    <h1>Chats are here</h1>
-    <span id="sender" style="display: none;" ><%= currentUser.username %></span>
-    <a href="/sendmsg">Send a Message</a>
-    <% currentUser.message.forEach(element => {  %>
-        <div>
-            <h5><%= element.sender.username %></h5>
-            <p> <%= element.text %>  </p>
-            <button> decrypt</button>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/EC-Logo.svg/2560px-EC-Logo.svg.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            EncryptChat
+          </a>
+          <div class="d-flex">
+            <% if(currentUser){ %> 
+                <div class="nav-item">
+                    <a class="nav-link" href="/logout">LogOut</a>
+                </div>
+            <% }else{ %>
+                <div class="container-fluid">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/login">LogIn</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register">SignUp</a></li>
+                </ul>
+                </div>
+            <% } %>  
+          </div>
         </div>
-    <% }); %> 
+        
+      </nav>
 
-    <a href="/">Go home</a>
+    <div class="container">
+        <h1>
+         <!-- <i style='font-size:48px' class='fas'>&#xf2b6;</i> -->
+        </h1>
+        <span id="sender" style="display: none;" ><%= currentUser.username %></span>
+         <!-- <a href="/sendmsg"><button>Send a Message</button></a> -->
+
+        <% currentUser.message.forEach(element => {  %>
+        <div class="card bg-light mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><%= element.sender.username %></h5>
+              <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+              <p class="card-text"><%= element.text %></p>
+              <button class="btn card-link">Decrypt</button>
+              <!-- <a href="#" class="card-link">Another link</a> -->
+            </div>
+          </div>
+        <% }); %> 
+
+        <a class="btn btn-lg" href="/">Go home</a>
+    </div>
+    
     <script src="decrypt.js"></script>
 </body>
 </html>

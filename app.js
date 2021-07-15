@@ -43,21 +43,36 @@ passport.deserializeUser(User.deserializeUser());
 
 app.get("/",(req,res)=>{
     res.render("home.ejs",{currentUser: req.user});
-    console.log(req.user);
+    // console.log(req.user);
 })
 
-app.get("/sendmsg",isLoggedIn,(req,res)=>{
-    res.render("sender.ejs",{currentUser: req.user});
+// app.get("/sendmsg",isLoggedIn,(req,res)=>{
+//     res.render("sender.ejs",{currentUser: req.user});
+// })
+
+app.get("/:id/sendmsg" , isLoggedIn ,(req,res)=>{
+    
+    User.findById(req.params.id,(err,user)=>{
+        if(err){
+            console.log(err);
+        }else{
+           
+            res.render("sender.ejs",{currentUser: req.user, reciever : user})
+        }
+    });
+
+    
 })
 
 app.post("/send",(req,res)=>{
     let recipient = req.body.message.reciever;
+    console.log(req.body);
     User.find({"username" : recipient},(err,foundUser)=>{
         if(err){
             console.log(err);
         }
         else{
-            // console.log(foundUser);
+            console.log(foundUser);
             // let message = {};
             // message.sender.id = req.user._id;
             // message.sender.username = req.user.username;
@@ -108,6 +123,65 @@ app.post("/send",(req,res)=>{
     } 
 )});
 
+// app.post("/send",(req,res)=>{
+//     let recipient = req.body.message.reciever;
+//     console.log(req.body);
+//     User.findById({"username" : recipient},(err,foundUser)=>{
+//         if(err){
+//             console.log(err);
+//         }
+//         else{
+//             console.log(foundUser);
+//             // let message = {};
+//             // message.sender.id = req.user._id;
+//             // message.sender.username = req.user.username;
+//             // message.reciever.id = foundUser._id;
+//             // message.reciever.username = foundUser.username;
+//             // message.text = req.body.message;
+
+//             Message.create(req.body.message,(err,createdMessage)=>{
+//                 // console.log("==" + req.body.)
+//                 if(err){
+//                     console.log(err);
+//                 }
+//                 else{
+                    
+//                     createdMessage.sender.id = req.user._id;
+//                     createdMessage.sender.username = req.user.username;
+//                     createdMessage.reciever.id = foundUser[0]._id;
+//                     createdMessage.reciever.username = foundUser[0].username;
+
+//                     // console.log(foundUser[0]);
+//                     // console.log(createdMessage.reciever);
+//                     createdMessage.save((err,msg)=>{
+//                         if(err){
+//                             console.log(err);
+//                         }
+//                         else{
+                            
+//                         }
+//                     })
+
+//                     foundUser[0].message.push(createdMessage);
+//                     foundUser[0].save((err,doc)=>{
+//                         if(err){
+//                             console.log(err);
+//                         }
+//                         else{
+//                             console.log(message);
+//                             res.redirect("/chats");
+//                         }
+//                     })
+//                 }
+//             })
+
+
+
+
+//         }
+//     } 
+// )});
+
 app.get("/login",(req,res)=>{
     res.render("login.ejs",{currentUser:req.user});
 })
@@ -133,7 +207,7 @@ app.post("/register",(req,res)=>{
 // handle login logic
 app.post("/login",passport.authenticate("local",
     {
-        successRedirect:"/chats",
+        successRedirect:"/home",
         failureRedirect:"/login"
     }),(req,res)=>{
     
@@ -143,6 +217,19 @@ app.get("/logout",(req,res)=>{
     req.logout();
     res.redirect("/");
 });
+
+//Contacts Route
+
+app.get("/contacts",(req,res)=>{
+    User.find({},(err,users)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("contacts.ejs",{foundUsers : users});
+        }
+    })
+})
 
 
 

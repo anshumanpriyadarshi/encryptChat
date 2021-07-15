@@ -1,4 +1,4 @@
-
+console.log("con")
 let btn = $(document).ready(function(){
     $("button").on('click', function(){
          $(this).html("decrypted");
