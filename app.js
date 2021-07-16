@@ -207,7 +207,7 @@ app.post("/register",(req,res)=>{
 // handle login logic
 app.post("/login",passport.authenticate("local",
     {
-        successRedirect:"/home",
+        successRedirect:"/",
         failureRedirect:"/login"
     }),(req,res)=>{
     
